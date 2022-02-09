@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {NavLink, Routes, Route} from 'react-router-dom';
 import Inicio from './componentes/Inicio';
@@ -11,35 +11,6 @@ import { createStore } from 'redux';
 import reducer from './reducers/TiendaReducer';
 
 const App = () => {
-
-	const [carrito, cambiarCarrito] = useState([]);
-	
-	const agregarProductoAlCarrito = (idProductoAAgregar, nombre) => {
-		if(carrito.length === 0){
-			cambiarCarrito([{id: idProductoAAgregar, nombre: nombre, cantidad: 1}]);
-		} else{
-			const nuevoCarrito = [...carrito]
-			const yaEstaEnCarrito = nuevoCarrito.filter((productoDeCarrito) => {
-				return productoDeCarrito.id === idProductoAAgregar
-			}).length > 0;
-			if(yaEstaEnCarrito){
-				nuevoCarrito.forEach((productoDeCarrito, index) => {
-					if(productoDeCarrito.id === idProductoAAgregar){
-						const cantidad = nuevoCarrito[index].cantidad;
-						nuevoCarrito[index] = {
-							id: idProductoAAgregar, 
-							nombre: nombre, 
-							cantidad: cantidad + 1
-						}
-					}
-				}
-				);
-			}else{
-				nuevoCarrito.push({id: idProductoAAgregar, nombre: nombre, cantidad : 1});
-			}
-			cambiarCarrito(nuevoCarrito);
-		}
-	}
 	const store = createStore(reducer) 
 
   return ( 
@@ -55,13 +26,11 @@ const App = () => {
 						<Route path='*' element={<Error404/>}/>
             <Route path= '/' element={<Inicio/>}/>
             <Route path='/blog' element={<Blog/>}/>
-            <Route path='/tienda' element={
-						<Tienda  agregarProductoAlCarrito = {agregarProductoAlCarrito}/>}
-						/>
+            <Route path='/tienda' element={<Tienda />}/>
           </Routes>
         </main>
         <aside>
-          <Carrito carrito = {carrito} />
+          <Carrito />
         </aside>
     	</Contenedor>
 		</Provider>
